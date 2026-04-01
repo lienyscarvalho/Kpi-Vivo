@@ -1,0 +1,1090 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --vp:#660099;--vp2:#8B00CC;--vp3:#4A0070;--vp4:#2D0044;
+  --vpink:#CC0066;--vcyan:#00CCCC;--vgreen:#00AA44;
+  --vred:#CC0000;--vor:#FF6600;--vyw:#FFCC00;
+  --bg:#09091A;--bg2:#10102A;--bg3:#181838;--bg4:#202050;
+  --t:#E8E8F5;--t2:#9090B8;--t3:#5A5A80;
+  --bord:rgba(102,0,153,0.32);--bord2:rgba(102,0,153,0.62);
+  --glass:rgba(18,18,44,0.88);
+  --r:10px;--r2:16px;--r3:20px;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;overflow-x:hidden}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--vp);border-radius:3px}
+
+/* ═══ SCREENS ═══ */
+.screen{display:none;flex-direction:column;min-height:100vh}
+.screen.active{display:flex}
+
+/* ══════════════════════════
+   LOGIN
+══════════════════════════ */
+#sc-login{
+  align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  background:radial-gradient(ellipse at 20% 20%, #3D0060 0%, #1A0030 40%, #0A0018 100%);
+  padding:20px;
+}
+
+/* animated orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+.o1{width:520px;height:520px;background:var(--vp);opacity:.35;top:-160px;left:-160px;animation:of 9s ease-in-out infinite}
+.o2{width:420px;height:420px;background:var(--vpink);opacity:.28;bottom:-120px;right:-120px;animation:of 11s ease-in-out infinite reverse}
+.o3{width:280px;height:280px;background:var(--vcyan);opacity:.15;top:45%;left:55%;animation:of 7s ease-in-out infinite 2s}
+
+@keyframes of{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,-22px) scale(1.06)}}
+
+/* grid overlay */
+.grid-bg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(102,0,153,.07) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(102,0,153,.07) 1px,transparent 1px);
+  background-size:44px 44px;pointer-events:none;
+}
+
+/* card */
+.login-card{
+  position:relative;z-index:10;
+  background:var(--glass);
+  border:1px solid var(--bord2);
+  border-radius:var(--r3);
+  padding:40px 36px 36px;
+  width:100%;max-width:460px;
+  backdrop-filter:blur(24px);
+  box-shadow:0 0 70px rgba(102,0,153,.28),0 24px 64px rgba(0,0,0,.55);
+  animation:cIn .65s cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes cIn{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* logo row */
+.lc-logo{display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:28px}
+.lc-circle{
+  width:58px;height:58px;border-radius:50%;
+  background:white;display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:19px;color:var(--vp);
+  box-shadow:0 0 28px rgba(255,255,255,.22);flex-shrink:0;
+}
+.lc-text h1{font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;color:#fff;letter-spacing:.8px;line-height:1.1}
+.lc-text p{font-size:10px;color:rgba(255,255,255,.58);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+
+/* title */
+.lc-title{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.45);text-align:center;letter-spacing:2.5px;
+  text-transform:uppercase;margin-bottom:26px;
+}
+
+/* ── form group ── */
+.fg{margin-bottom:16px}
+
+.fg label{
+  display:block;
+  font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--t2);margin-bottom:7px;
+}
+
+/* input wrapper — icon INSIDE using padding only */
+.fw{position:relative}
+
+.fw .fi{
+  /* icon span — left side */
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:42px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+  pointer-events:none;
+  z-index:2;
+}
+
+.fw input{
+  width:100%;
+  /* enough left-padding to clear the icon */
+  padding:12px 14px 12px 44px;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid var(--bord);
+  border-radius:var(--r);
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);
+  outline:none;transition:border-color .2s,background .2s,box-shadow .2s;
+  /* remove browser autofill yellow bg */
+  -webkit-text-fill-color:var(--t);
+}
+
+.fw input:focus{
+  border-color:var(--vp2);
+  background:rgba(102,0,153,.1);
+  box-shadow:0 0 0 3px rgba(102,0,153,.18);
+}
+
+.fw input::placeholder{color:var(--t3);font-size:13px}
+
+/* autofill override */
+.fw input:-webkit-autofill,
+.fw input:-webkit-autofill:focus{
+  -webkit-box-shadow:0 0 0 1000px #1a1040 inset;
+  -webkit-text-fill-color:var(--t);
+  caret-color:var(--t);
+}
+
+/* eye button — right side */
+.eye{
+  position:absolute;right:0;top:0;bottom:0;
+  width:42px;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;
+  font-size:15px;color:var(--t2);
+  transition:color .2s;z-index:2;
+}
+.eye:hover{color:var(--vp2)}
+
+/* password field: extra right padding for the eye */
+.fw input.has-eye{padding-right:44px}
+
+/* options row */
+.fopts{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:8px;flex-wrap:wrap}
+
+.fchk{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--t2)}
+.fchk input[type=checkbox]{width:15px;height:15px;accent-color:var(--vp2);cursor:pointer;flex-shrink:0}
+
+.flink{font-size:12px;color:var(--vcyan);text-decoration:none;transition:opacity .2s}
+.flink:hover{opacity:.72}
+
+/* submit btn */
+.btn-submit{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--vp) 0%,var(--vp2) 55%,var(--vpink) 100%);
+  border:none;border-radius:var(--r);
+  color:#fff;font-family:'Rajdhani',sans-serif;
+  font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:transform .25s,box-shadow .25s;
+  position:relative;overflow:hidden;
+}
+.btn-submit::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,.12),transparent);
+  transform:translateX(-100%);transition:transform .5s;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(102,0,153,.5)}
+.btn-submit:hover::after{transform:translateX(100%)}
+.btn-submit:active{transform:translateY(0)}
+
+/* divider */
+.ldiv{text-align:center;margin:18px 0;position:relative}
+.ldiv::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--bord)}
+.ldiv span{position:relative;background:var(--glass);padding:0 12px;font-size:10px;color:var(--t2);letter-spacing:1.2px}
+
+/* cred box */
+.cred-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--bord);
+  border-radius:var(--r);
+  padding:14px 16px;
+  display:flex;flex-direction:column;gap:7px;
+}
+.cr{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.cr-lbl{font-size:11px;color:var(--t2)}
+.cr-val{
+  font-size:11px;font-family:'DM Sans',monospace;
+  color:var(--vcyan);background:rgba(0,204,204,.1);
+  padding:3px 9px;border-radius:6px;letter-spacing:.4px;white-space:nowrap;
+}
+
+/* error */
+.lerr{
+  background:rgba(204,0,0,.14);border:1px solid rgba(204,0,0,.42);
+  border-radius:8px;padding:9px 13px;font-size:12px;color:#FF6666;
+  margin-bottom:14px;display:none;align-items:center;gap:8px;
+}
+.lerr.show{display:flex}
+
+/* hint */
+.lhint{text-align:center;font-size:10px;color:var(--t2);margin-top:18px;padding-top:16px;border-top:1px solid var(--bord);line-height:1.65}
+.lhint strong{color:var(--vcyan)}
+
+/* ══════════════════════════
+   APP HEADER
+══════════════════════════ */
+.app-header{
+  background:linear-gradient(135deg,var(--vp3),var(--vp));
+  border-bottom:2px solid var(--vpink);
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 4px 28px rgba(102,0,153,.42);
+}
+.ah-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:10px}
+.ah-left{display:flex;align-items:center;gap:10px;min-width:0}
+.ah-logo{
+  width:40px;height:40px;border-radius:50%;background:#fff;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:var(--vp);
+}
+.ah-ttl{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ah-sub{font-size:9px;color:rgba(255,255,255,.58);letter-spacing:1.5px;text-transform:uppercase}
+.ah-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+.user-pill{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;padding:5px 12px 5px 5px;
+}
+.user-av{
+  width:28px;height:28px;border-radius:50%;background:var(--vpink);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.user-nm{font-size:12px;font-weight:600;color:#fff}
+.user-rl{font-size:9px;color:rgba(255,255,255,.58);letter-spacing:.4px}
+
+.btn-h{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  border-radius:8px;color:#fff;padding:7px 12px;cursor:pointer;
+  font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;
+  transition:background .2s;display:flex;align-items:center;gap:5px;white-space:nowrap;
+}
+.btn-h:hover{background:rgba(255,255,255,.2)}
+.btn-logout{background:rgba(204,0,102,.28);border-color:rgba(204,0,102,.5)}
+.btn-logout:hover{background:rgba(204,0,102,.5)}
+
+/* ══════════════════════════
+   NAV BAR
+══════════════════════════ */
+.app-nav{
+  background:var(--bg2);
+  display:flex;overflow-x:auto;
+  border-bottom:1px solid var(--bord);
+  scrollbar-width:none;
+}
+.app-nav::-webkit-scrollbar{display:none}
+.nav-btn{
+  background:none;border:none;border-bottom:3px solid transparent;
+  color:var(--t2);padding:11px 16px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;
+  white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;
+  transition:all .18s;
+}
+.nav-btn:hover{color:var(--vp2);background:rgba(102,0,153,.1)}
+.nav-btn.active{color:#fff;border-bottom-color:var(--vpink);background:rgba(102,0,153,.18)}
+
+/* ══════════════════════════
+   MAIN + PAGES
+══════════════════════════ */
+.app-main{flex:1;overflow-y:auto}
+.page{display:none;padding:22px 24px;max-width:1380px;margin:0 auto;animation:pIn .28s ease both}
+.page.active{display:block}
+@keyframes pIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── section labels ── */
+.pg-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--vp2);margin-bottom:4px;letter-spacing:.8px}
+.pg-sub{font-size:12px;color:var(--t2);margin-bottom:22px;letter-spacing:.4px}
+
+/* ── KPI grid ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:13px;margin-bottom:22px}
+
+.kpi{
+  background:var(--bg3);border:1px solid var(--bord);
+  border-radius:14px;padding:16px;cursor:pointer;
+  transition:transform .22s,box-shadow .22s,border-color .22s;
+  position:relative;overflow:hidden;
+}
+.kpi:hover{transform:translateY(-3px);border-color:var(--vp2);box-shadow:0 8px 30px rgba(102,0,153,.28)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--vp),var(--vpink))}
+.kpi.g::before{background:linear-gradient(90deg,var(--vgreen),var(--vcyan))}
+.kpi.r::before{background:linear-gradient(90deg,var(--vred),var(--vpink))}
+.kpi.o::before{background:linear-gradient(90deg,var(--vor),var(--vyw))}
+.kpi.c::before{background:linear-gradient(90deg,var(--vcyan),#0099FF)}
+
+.kpi-lbl{font-size:9px;color:var(--t2);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:8px}
+.kpi-val{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:#fff;line-height:1}
+.kpi-unit{font-size:14px;color:var(--t2)}
+.kpi-trend{font-size:11px;margin-top:5px}
+.up{color:var(--vgreen)}.dn{color:var(--vred)}.eq{color:var(--vyw)}
+.kpi-target{font-size:10px;color:var(--t2);margin-top:3px}
+.kpi-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:9px;overflow:hidden}
+.kpi-fill{height:100%;border-radius:2px}
+
+/* ── charts ── */
+.charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-bottom:22px}
+.chart-card{background:var(--bg3);border:1px solid var(--bord);border-radius:14px;padding:18px}
+.cc-title{
+  font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;
+  color:var(--vp2);margin-bottom:14px;letter-spacing:.4px;
+  display:flex;align-items:center;gap:8px;
+}
+.cc-dot{width:7px;height:7px;border-radius:50%;background:var(--vpink);flex-shrink:0}
+.cw{position:relative;width:100%}
+.cw canvas{width:100%!important}
+
+/* ── table ── */
+.table-wrap{background:var(--bg3);border:1px solid var(--bord);border-radius:14px;overflow:hidden;margin-bottom:22px}
+.tw-hdr{padding:13px 18px;background:var(--bg4);border-bottom:1px solid var(--bord);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--vp2);letter-spacing:.4px}
+.dt{width:100%;border-collapse:collapse;font-size:11px}
+.dt th{background:var(--bg4);color:var(--t2);padding:9px 14px;text-align:left;font-weight:600;font-size:9px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bord)}
+.dt td{padding:9px 14px;border-bottom:1px solid rgba(102,0,153,.1);color:var(--t)}
+.dt tr:hover td{background:rgba(102,0,153,.07)}
+.dt tr:last-child td{border-bottom:none}
+
+/* badges */
+.b{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.4px}
+.bg{background:rgba(0,170,68,.2);color:#44DD77;border:1px solid rgba(0,170,68,.4)}
+.br{background:rgba(204,0,0,.2);color:#FF5555;border:1px solid rgba(204,0,0,.4)}
+.by{background:rgba(255,204,0,.18);color:#FFDD44;border:1px solid rgba(255,204,0,.4)}
+.bb{background:rgba(0,120,255,.2);color:#55AAFF;border:1px solid rgba(0,120,255,.4)}
+.bp{background:rgba(102,0,153,.3);color:#CC77FF;border:1px solid rgba(102,0,153,.5)}
+.bo{background:rgba(255,102,0,.2);color:#FF9944;border:1px solid rgba(255,102,0,.4)}
+
+/* ── two-col ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+
+/* ── gauge ── */
+.gauge-row{display:flex;flex-direction:column;gap:10px}
+.gi{display:flex;align-items:center;gap:10px}
+.g-lbl{font-size:11px;color:var(--t2);min-width:130px}
+.g-bw{flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden}
+.g-bf{height:100%;border-radius:4px;transition:width 1s ease}
+.g-pct{font-size:11px;font-weight:600;min-width:38px;text-align:right}
+
+/* ── alert ── */
+.alert{border-radius:8px;padding:10px 14px;margin-bottom:9px;font-size:12px;display:flex;align-items:center;gap:10px;line-height:1.5}
+.a-red{background:rgba(204,0,0,.14);border:1px solid rgba(204,0,0,.42);color:#FF6666}
+.a-yw{background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.42);color:#FFDD44}
+.a-gn{background:rgba(0,170,68,.1);border:1px solid rgba(0,170,68,.42);color:#44DD77}
+
+/* ── info boxes ── */
+.ms-info{background:rgba(0,204,204,.1);border:1px solid rgba(0,204,204,.35);color:#66EEFF;border-radius:10px;padding:13px 15px;margin-bottom:15px;font-size:12px;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.ms-warn{background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.35);color:#FFDD55;border-radius:10px;padding:13px 15px;margin-bottom:15px;font-size:12px;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.ms-tip{background:rgba(0,170,68,.1);border:1px solid rgba(0,170,68,.35);color:#44DD77;border-radius:10px;padding:13px 15px;margin-bottom:15px;font-size:12px;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+
+/* ══════════════════════════
+   INDICADORES PAGE
+══════════════════════════ */
+.ind-hero{
+  background:linear-gradient(135deg,var(--bg3),var(--bg4));
+  border:1px solid var(--bord);border-radius:var(--r2);
+  padding:26px 30px;margin-bottom:24px;position:relative;overflow:hidden;
+}
+.ind-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--vp),var(--vpink),var(--vcyan))}
+.ind-hero h2{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:6px}
+.ind-hero p{font-size:12px;color:var(--t2);line-height:1.65}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(102,0,153,.3);border:1px solid var(--bord2);
+  border-radius:20px;padding:4px 12px;font-size:10px;color:#CC77FF;margin-top:10px;letter-spacing:.5px;
+}
+
+/* category cards */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.cat{
+  background:var(--bg3);border:1px solid var(--bord);border-radius:14px;
+  padding:18px;cursor:pointer;transition:all .22s;
+  border-top:3px solid transparent;
+}
+.cat:hover{border-color:var(--vp2);transform:translateY(-2px);box-shadow:0 6px 24px rgba(102,0,153,.28)}
+.cat-p{border-top-color:var(--vp2)}
+.cat-g{border-top-color:var(--vgreen)}
+.cat-c{border-top-color:var(--vcyan)}
+.cat-o{border-top-color:var(--vor)}
+.cat-r{border-top-color:var(--vred)}
+.cat-y{border-top-color:var(--vyw)}
+.cat-icon{font-size:28px;margin-bottom:10px}
+.cat-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:5px}
+.cat-desc{font-size:10px;color:var(--t2);line-height:1.5}
+.cat-count{
+  display:inline-block;margin-top:8px;
+  background:rgba(102,0,153,.3);color:#CC77FF;
+  padding:2px 9px;border-radius:10px;font-size:10px;font-weight:600;
+}
+
+/* speedometer */
+.speed-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.speed{
+  background:var(--bg3);border:1px solid var(--bord);border-radius:14px;
+  padding:14px;text-align:center;
+}
+.speed-arc{position:relative;width:90px;height:52px;margin:0 auto 8px;overflow:hidden}
+.arc-bg{position:absolute;bottom:0;left:0;right:0;height:90px;border-radius:90px 90px 0 0;background:rgba(255,255,255,.06)}
+.arc-fill{
+  position:absolute;bottom:0;left:0;right:0;height:90px;
+  border-radius:90px 90px 0 0;
+  transform-origin:50% 100%;
+  transform:rotate(0deg);
+  transition:transform 1.2s cubic-bezier(.22,1,.36,1);
+}
+.speed-val{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff}
+.speed-lbl{font-size:9px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.speed-meta{font-size:9px;margin-top:3px}
+
+/* progress list */
+.prog-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.pi{
+  background:var(--bg3);border:1px solid var(--bord);border-radius:10px;padding:12px 16px;
+}
+.pi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pi-name{font-size:12px;font-weight:500;color:var(--t)}
+.pi-vals{display:flex;align-items:center;gap:8px}
+.pi-curr{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#fff}
+.pi-tgt{font-size:10px;color:var(--t2)}
+.pi-bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.pi-fill{height:100%;border-radius:3px;transition:width 1.2s ease}
+.pi-status{font-size:10px;margin-top:5px}
+
+/* MOBILE bottom nav */
+.mob-nav{
+  display:none;
+  background:var(--bg2);border-top:1px solid var(--bord);
+  padding:6px 4px;position:sticky;bottom:0;z-index:150;
+}
+.mob-nav-inner{display:flex;overflow-x:auto;gap:4px;scrollbar-width:none}
+.mob-nav-inner::-webkit-scrollbar{display:none}
+.mn{
+  flex-shrink:0;min-width:52px;
+  background:none;border:1px solid var(--bord);border-radius:8px;
+  color:var(--t2);padding:6px 10px;cursor:pointer;
+  font-size:9px;font-family:'DM Sans',sans-serif;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  transition:all .18s;
+}
+.mn span:first-child{font-size:17px}
+.mn.active{background:rgba(102,0,153,.25);border-color:var(--vp2);color:#fff}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .login-card{padding:28px 20px 24px}
+  .lc-text h1{font-size:18px}
+  .app-nav{display:none}
+  .mob-nav{display:block}
+  .page{padding:16px 14px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-grid{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .ah-sub{display:none}
+  .user-rl{display:none}
+  .ind-hero{padding:18px 16px}
+  .ind-hero h2{font-size:20px}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .speed-row{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:420px){
+  .kpi-grid{grid-template-columns:1fr}
+  .cat-grid{grid-template-columns:1fr}
+  .speed-row{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     LOGIN
+══════════════════════════════ -->
+<div id="sc-login" class="screen active">
+  <div class="grid-bg"></div>
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+
+  <div class="login-card">
+    <div class="lc-logo">
+      <div class="lc-circle">vivo</div>
+      <div class="lc-text">
+        <h1>PSR · TEL Telecom</h1>
+        <p>Fibra Óptica · São Paulo</p>
+      </div>
+    </div>
+
+    <div class="lc-title">Acesso ao Sistema de Gestão</div>
+
+    <div id="lerr" class="lerr"><span>⚠️</span><span id="lerr-msg">Usuário ou senha incorretos.</span></div>
+
+    <!-- NOME -->
+    <div class="fg">
+      <label>Nome Completo</label>
+      <div class="fw">
+        <span class="fi">🙎</span>
+        <input type="text" id="f-nome" placeholder="Digite seu nome completo" autocomplete="name">
+      </div>
+    </div>
+
+    <!-- USUÁRIO -->
+    <div class="fg">
+      <label>Usuário / Matrícula</label>
+      <div class="fw">
+        <span class="fi">👤</span>
+        <input type="text" id="f-user" placeholder="ex: joao.silva ou 123456" autocomplete="username">
+      </div>
+    </div>
+
+    <!-- SENHA -->
+    <div class="fg">
+      <label>Senha</label>
+      <div class="fw">
+        <span class="fi">🔒</span>
+        <input type="password" id="f-pass" class="has-eye" placeholder="Digite sua senha" autocomplete="current-password">
+        <button class="eye" id="eye-btn" onclick="toggleEye()" type="button" title="Mostrar/ocultar senha">👁️</button>
+      </div>
+    </div>
+
+    <div class="fopts">
+      <label class="fchk">
+        <input type="checkbox" id="f-rem"> Lembrar acesso
+      </label>
+      <a href="#" class="flink" onclick="return false">Esqueci minha senha</a>
+    </div>
+
+    <button class="btn-submit" id="btn-login" onclick="doLogin()">Entrar no Sistema</button>
+
+    <div class="ldiv"><span>CREDENCIAIS DE DEMONSTRAÇÃO</span></div>
+
+    <div class="cred-box">
+      <div class="cr"><span class="cr-lbl">👔 Gestor</span><span class="cr-val">gestor / vivo2025</span></div>
+      <div class="cr"><span class="cr-lbl">👷 Supervisor</span><span class="cr-val">supervisor / tel2025</span></div>
+      <div class="cr"><span class="cr-lbl">🔧 Técnico</span><span class="cr-val">tecnico / fibra123</span></div>
+    </div>
+
+    <div class="lhint">
+      Sistema restrito · <strong>TEL Telecomunicações SP</strong><br>
+      Acesso autorizado a colaboradores credenciados Vivo Telefônica
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     APP
+══════════════════════════════ -->
+<div id="sc-app" class="screen">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="ah-inner">
+      <div class="ah-left">
+        <div class="ah-logo">vivo</div>
+        <div>
+          <div class="ah-ttl">PSR · TEL Telecomunicações</div>
+          <div class="ah-sub">Gestão Operacional · Fibra Óptica · SP</div>
+        </div>
+      </div>
+      <div class="ah-right">
+        <div class="user-pill">
+          <div class="user-av" id="uav">GS</div>
+          <div>
+            <div class="user-nm" id="unm">Usuário</div>
+            <div class="user-rl" id="url">Perfil</div>
+          </div>
+        </div>
+        <button class="btn-h btn-logout" onclick="doLogout()">↩ <span>Sair</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Nav desktop -->
+  <nav class="app-nav">
+    <button class="nav-btn" onclick="goPage('p-ind')">🏠 Indicadores</button>
+    <button class="nav-btn" onclick="goPage('p-dash')">📊 Dashboard</button>
+    <button class="nav-btn" onclick="goPage('p-kpis')">🎯 KPIs</button>
+    <button class="nav-btn" onclick="goPage('p-fibra')">🔗 Fibra Óptica</button>
+    <button class="nav-btn" onclick="goPage('p-agile')">⚡ Ágil</button>
+    <button class="nav-btn" onclick="goPage('p-qual')">✅ Qualidade</button>
+    <button class="nav-btn" onclick="goPage('p-alertas')">🚨 Alertas</button>
+  </nav>
+
+  <main class="app-main">
+
+    <!-- ════ PÁGINA: INDICADORES OPERACIONAIS ════ -->
+    <div id="p-ind" class="page active">
+      <div class="ind-hero">
+        <h2>📈 Indicadores Operacionais</h2>
+        <p>Painel central de métricas de desempenho da PSR TEL Telecomunicações SP — Vivo Telefônica<br>Atividades de Instalação, Manutenção e Reparo em Fibra Óptica FTTH/GPON</p>
+        <div class="hero-badge">🟢 Operação Ativa · <span id="ind-clock">--:--:--</span> · Atualizado a cada 15 min</div>
+      </div>
+
+      <!-- Categorias de indicadores -->
+      <div class="cat-grid">
+        <div class="cat cat-p" onclick="goPage('p-kpis')">
+          <div class="cat-icon">⚙️</div>
+          <div class="cat-name">Operacional</div>
+          <div class="cat-desc">SLA, TMA, FCR, MTTR, OS/dia, retrabalho</div>
+          <div class="cat-count">9 indicadores</div>
+        </div>
+        <div class="cat cat-g" onclick="goPage('p-kpis')">
+          <div class="cat-icon">⭐</div>
+          <div class="cat-name">Qualidade</div>
+          <div class="cat-desc">NPS, CSAT, DPM, auditoria técnica</div>
+          <div class="cat-count">6 indicadores</div>
+        </div>
+        <div class="cat cat-c" onclick="goPage('p-fibra')">
+          <div class="cat-icon">🔗</div>
+          <div class="cat-name">Fibra Óptica</div>
+          <div class="cat-desc">Sinal óptico, BER, emendas, disponibilidade</div>
+          <div class="cat-count">8 indicadores</div>
+        </div>
+        <div class="cat cat-o" onclick="goPage('p-kpis')">
+          <div class="cat-icon">💰</div>
+          <div class="cat-name">Financeiro</div>
+          <div class="cat-desc">Custo/OS, OPEX, receita, ROI</div>
+          <div class="cat-count">6 indicadores</div>
+        </div>
+        <div class="cat cat-r" onclick="goPage('p-alertas')">
+          <div class="cat-icon">🚨</div>
+          <div class="cat-name">Alertas</div>
+          <div class="cat-desc">SLA crítico, incidentes de rede, retrabalho</div>
+          <div class="cat-count">3 críticos hoje</div>
+        </div>
+        <div class="cat cat-y" onclick="goPage('p-kpis')">
+          <div class="cat-icon">👥</div>
+          <div class="cat-name">RH / Equipe</div>
+          <div class="cat-desc">Absenteísmo, turnover, EPI, treinamentos</div>
+          <div class="cat-count">6 indicadores</div>
+        </div>
+      </div>
+
+      <!-- Velocímetros / gauges principais -->
+      <div class="pg-title" style="font-size:16px;margin-bottom:14px">Indicadores Principais — Hoje</div>
+      <div class="speed-row" id="speed-row">
+        <div class="speed">
+          <div class="speed-arc"><div class="arc-bg"></div><div class="arc-fill" id="arc-sla" style="background:linear-gradient(180deg,#00AA44,#00CC55);clip-path:inset(0 0 0 0)"></div></div>
+          <div class="speed-val">96<span style="font-size:16px;color:var(--t2)">%</span></div>
+          <div class="speed-lbl">SLA Instalação</div>
+          <div class="speed-meta" style="color:var(--vgreen)">▲ Meta: 95%</div>
+        </div>
+        <div class="speed">
+          <div class="speed-arc"><div class="arc-bg"></div><div class="arc-fill" id="arc-fcr" style="background:linear-gradient(180deg,#660099,#CC0066)"></div></div>
+          <div class="speed-val">87<span style="font-size:16px;color:var(--t2)">%</span></div>
+          <div class="speed-lbl">FCR 1ª Visita</div>
+          <div class="speed-meta" style="color:var(--vp2)">▲ Meta: 85%</div>
+        </div>
+        <div class="speed">
+          <div class="speed-arc"><div class="arc-bg"></div><div class="arc-fill" id="arc-nps" style="background:linear-gradient(180deg,#00CCCC,#0099FF)"></div></div>
+          <div class="speed-val">+68</div>
+          <div class="speed-lbl">NPS</div>
+          <div class="speed-meta" style="color:var(--vcyan)">▲ Meta: +60</div>
+        </div>
+        <div class="speed">
+          <div class="speed-arc"><div class="arc-bg"></div><div class="arc-fill" id="arc-rep" style="background:linear-gradient(180deg,#CC0000,#FF4444)"></div></div>
+          <div class="speed-val">6<span style="font-size:16px;color:var(--t2)">%</span></div>
+          <div class="speed-lbl">Retrabalho</div>
+          <div class="speed-meta" style="color:var(--vred)">▼ Meta: ≤5%</div>
+        </div>
+        <div class="speed">
+          <div class="speed-arc"><div class="arc-bg"></div><div class="arc-fill" id="arc-sla2" style="background:linear-gradient(180deg,#FF6600,#FFAA00)"></div></div>
+          <div class="speed-val">91<span style="font-size:16px;color:var(--t2)">%</span></div>
+          <div class="speed-lbl">SLA Reparo 24h</div>
+          <div class="speed-meta" style="color:var(--vor)">▲ Meta: 90%</div>
+        </div>
+        <div class="speed">
+          <div class="speed-arc"><div class="arc-bg"></div><div class="arc-fill" id="arc-disp" style="background:linear-gradient(180deg,#00CCCC,#00AA44)"></div></div>
+          <div class="speed-val">99<span style="font-size:16px;color:var(--t2)">.7%</span></div>
+          <div class="speed-lbl">Uptime Rede</div>
+          <div class="speed-meta" style="color:var(--vcyan)">▲ Meta: 99.5%</div>
+        </div>
+      </div>
+
+      <!-- Progress list detalhada -->
+      <div class="pg-title" style="font-size:16px;margin-bottom:14px">Progresso vs. Meta — Semana Atual</div>
+      <div class="prog-list">
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">SLA Instalação (≤5 dias úteis)</span><div class="pi-vals"><span class="pi-curr">96%</span><span class="pi-tgt">meta 95%</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:96%;background:linear-gradient(90deg,#00AA44,#00CC66)"></div></div>
+          <div class="pi-status" style="color:var(--vgreen)">✅ Superado · +1pp acima da meta · Excelente</div>
+        </div>
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">FCR — First Call Resolution</span><div class="pi-vals"><span class="pi-curr">87%</span><span class="pi-tgt">meta 85%</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:87%;background:linear-gradient(90deg,var(--vp),var(--vpink))"></div></div>
+          <div class="pi-status" style="color:var(--vp2)">✅ Superado · +2pp · 78 técnicos, 67 resolvem na 1ª visita</div>
+        </div>
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">SLA Reparo 24h</span><div class="pi-vals"><span class="pi-curr">91%</span><span class="pi-tgt">meta 90%</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:91%;background:linear-gradient(90deg,var(--vor),var(--vyw))"></div></div>
+          <div class="pi-status" style="color:var(--vyw)">⚠️ Dentro da meta mas margem baixa — monitorar</div>
+        </div>
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">Retrabalho (Recall ≤30 dias)</span><div class="pi-vals"><span class="pi-curr">6%</span><span class="pi-tgt">meta ≤5%</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:60%;background:linear-gradient(90deg,var(--vred),var(--vpink))"></div></div>
+          <div class="pi-status" style="color:var(--vred)">❌ Abaixo da meta · +1pp acima do limite · Plano de ação necessário</div>
+        </div>
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">NPS Pós-Atendimento</span><div class="pi-vals"><span class="pi-curr">+68</span><span class="pi-tgt">meta +60</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:85%;background:linear-gradient(90deg,var(--vcyan),#0099FF)"></div></div>
+          <div class="pi-status" style="color:var(--vcyan)">✅ Zona Excelência · +8pts acima da meta</div>
+        </div>
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">OS/Técnico/Dia (Produtividade)</span><div class="pi-vals"><span class="pi-curr">5.2</span><span class="pi-tgt">meta 5.0</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:88%;background:linear-gradient(90deg,#660099,#00CCCC)"></div></div>
+          <div class="pi-status" style="color:var(--vgreen)">✅ Acima da meta · 218 OS concluídas hoje</div>
+        </div>
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">TMA — Tempo Médio de Atendimento</span><div class="pi-vals"><span class="pi-curr">4h12</span><span class="pi-tgt">meta ≤4h</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:70%;background:linear-gradient(90deg,var(--vyw),var(--vor))"></div></div>
+          <div class="pi-status" style="color:var(--vyw)">⚠️ Levemente acima · +12min · Revisar roteamento</div>
+        </div>
+        <div class="pi">
+          <div class="pi-top"><span class="pi-name">Disponibilidade de Rede FTTH</span><div class="pi-vals"><span class="pi-curr">99.7%</span><span class="pi-tgt">meta 99.5%</span></div></div>
+          <div class="pi-bar"><div class="pi-fill" style="width:99%;background:linear-gradient(90deg,var(--vcyan),var(--vgreen))"></div></div>
+          <div class="pi-status" style="color:var(--vgreen)">✅ Excelente · Uptime alto · Rede estável</div>
+        </div>
+      </div>
+
+      <!-- charts -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="cc-title"><span class="cc-dot"></span>Evolução Semanal — OS por Tipo</div>
+          <div class="cw" style="height:210px"><canvas id="c-ind-os"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="cc-title"><span class="cc-dot"></span>SLA Acumulado — Mês Corrente</div>
+          <div class="cw" style="height:210px"><canvas id="c-ind-sla"></canvas></div>
+        </div>
+      </div>
+
+      <!-- alertas rápidos -->
+      <div class="pg-title" style="font-size:16px;margin-bottom:12px">🚦 Status Operacional Atual</div>
+      <div class="alert a-red">🔴 <strong>CRÍTICO</strong> — 3 OS com SLA vencendo em menos de 1h — escalação necessária</div>
+      <div class="alert a-yw">🟡 <strong>ATENÇÃO</strong> — Retrabalho 6% esta semana · Meta: ≤5% · Aplicar 5 Porquês nas OS reincidentes</div>
+      <div class="alert a-yw">🟡 <strong>ATENÇÃO</strong> — TMA levemente acima da meta (+12 min) · Revisar rotas de deslocamento</div>
+      <div class="alert a-gn">✅ <strong>OK</strong> — NPS +68 · SLA Instalação 96% · FCR 87% — todos acima das metas</div>
+      <div class="alert a-gn">✅ <strong>OK</strong> — Disponibilidade de rede 99.7% · Nenhuma falha crítica de OLT registrada</div>
+    </div>
+
+    <!-- ════ PÁGINA: DASHBOARD ════ -->
+    <div id="p-dash" class="page">
+      <div class="pg-title">Central de Operações · PSR TEL SP</div>
+      <div class="pg-sub">Instalação · Manutenção · Reparo · Fibra Óptica FTTH/GPON · Tempo real</div>
+
+      <div class="kpi-grid">
+        <div class="kpi g"><div class="kpi-lbl">SLA Instalação</div><div class="kpi-val">96<span class="kpi-unit">%</span></div><div class="kpi-trend up">▲ Meta 95% · Superado</div><div class="kpi-bar"><div class="kpi-fill" style="width:96%;background:linear-gradient(90deg,#00AA44,#00CCCC)"></div></div></div>
+        <div class="kpi"><div class="kpi-lbl">FCR 1ª Visita</div><div class="kpi-val">87<span class="kpi-unit">%</span></div><div class="kpi-trend up">▲ Meta 85%</div><div class="kpi-bar"><div class="kpi-fill" style="width:87%;background:linear-gradient(90deg,#660099,#CC0066)"></div></div></div>
+        <div class="kpi o"><div class="kpi-lbl">OS Abertas Hoje</div><div class="kpi-val">342</div><div class="kpi-trend eq">● 247 inst · 95 rep</div><div class="kpi-bar"><div class="kpi-fill" style="width:68%;background:linear-gradient(90deg,#FF6600,#FFCC00)"></div></div></div>
+        <div class="kpi g"><div class="kpi-lbl">OS Concluídas</div><div class="kpi-val">218</div><div class="kpi-trend up">▲ 63% · +8% vs ontem</div><div class="kpi-bar"><div class="kpi-fill" style="width:63%;background:linear-gradient(90deg,#00AA44,#00CCCC)"></div></div></div>
+        <div class="kpi r"><div class="kpi-lbl">SLA Reparo 24h</div><div class="kpi-val">91<span class="kpi-unit">%</span></div><div class="kpi-trend up">▲ Meta Anatel 90%</div><div class="kpi-bar"><div class="kpi-fill" style="width:91%;background:linear-gradient(90deg,#FF6600,#CC0000)"></div></div></div>
+        <div class="kpi c"><div class="kpi-lbl">NPS</div><div class="kpi-val">+68</div><div class="kpi-trend up">▲ Meta +60 · Excelência</div><div class="kpi-bar"><div class="kpi-fill" style="width:85%;background:linear-gradient(90deg,#00CCCC,#0099FF)"></div></div></div>
+        <div class="kpi"><div class="kpi-lbl">TMA Atendimento</div><div class="kpi-val">4<span class="kpi-unit">h12</span></div><div class="kpi-trend eq">● Meta ≤4h · Atenção</div><div class="kpi-bar"><div class="kpi-fill" style="width:72%;background:linear-gradient(90deg,#FFCC00,#FF6600)"></div></div></div>
+        <div class="kpi r"><div class="kpi-lbl">Retrabalho</div><div class="kpi-val">6<span class="kpi-unit">%</span></div><div class="kpi-trend dn">▼ Meta ≤5% · Plano ação</div><div class="kpi-bar"><div class="kpi-fill" style="width:55%;background:linear-gradient(90deg,#CC0000,#CC0066)"></div></div></div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card"><div class="cc-title"><span class="cc-dot"></span>OS por Tipo — Semana</div><div class="cw" style="height:210px"><canvas id="c-os"></canvas></div></div>
+        <div class="chart-card"><div class="cc-title"><span class="cc-dot"></span>TMA Diário (horas)</div><div class="cw" style="height:210px"><canvas id="c-tma"></canvas></div></div>
+        <div class="chart-card"><div class="cc-title"><span class="cc-dot"></span>SLA Cumprido × Violado</div><div class="cw" style="height:210px"><canvas id="c-sla"></canvas></div></div>
+        <div class="chart-card"><div class="cc-title"><span class="cc-dot"></span>Produtividade por Equipe (OS/dia)</div><div class="cw" style="height:210px"><canvas id="c-prod"></canvas></div></div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="tw-hdr">🔴 OS Críticas em Andamento</div>
+        <table class="dt"><thead><tr><th>OS Nº</th><th>Tipo</th><th>Cliente</th><th>Bairro</th><th>Técnico</th><th>Prazo</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>2024-18742</td><td>Reparo</td><td>Empresa XYZ</td><td>Pinheiros</td><td>José Silva</td><td>16:00</td><td><span class="b br">CRÍTICO</span></td></tr>
+          <tr><td>2024-18739</td><td>Inst. FTTH</td><td>Maria Costa</td><td>Tatuapé</td><td>Ana Souza</td><td>17:30</td><td><span class="b by">EM RISCO</span></td></tr>
+          <tr><td>2024-18731</td><td>Manutenção</td><td>Cond. ABC</td><td>Moema</td><td>Pedro Lima</td><td>14:00</td><td><span class="b bg">NO PRAZO</span></td></tr>
+          <tr><td>2024-18715</td><td>Ativação FTTC</td><td>Ricardo M.</td><td>Vila Mariana</td><td>Fernanda R.</td><td>18:00</td><td><span class="b bb">EXECUÇÃO</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- ════ KPIs ════ -->
+    <div id="p-kpis" class="page">
+      <div class="pg-title">KPIs Operacionais · PSR Vivo Telefônica</div>
+      <div class="pg-sub">Indicadores-chave de desempenho — Instalação · Manutenção · Reparo</div>
+      <div class="kpi-grid">
+        <div class="kpi g"><div class="kpi-lbl">SLA Inst. ≤5 dias</div><div class="kpi-val">96<span class="kpi-unit">%</span></div><div class="kpi-target">Meta Anatel: 95%</div></div>
+        <div class="kpi"><div class="kpi-lbl">SLA Reparo 24h</div><div class="kpi-val">91<span class="kpi-unit">%</span></div><div class="kpi-target">Meta: 90%</div></div>
+        <div class="kpi o"><div class="kpi-lbl">TMA Reparo</div><div class="kpi-val">3<span class="kpi-unit">h45</span></div><div class="kpi-target">Meta: ≤4h</div></div>
+        <div class="kpi"><div class="kpi-lbl">FCR</div><div class="kpi-val">87<span class="kpi-unit">%</span></div><div class="kpi-target">Meta: 85%</div></div>
+        <div class="kpi c"><div class="kpi-lbl">NPS</div><div class="kpi-val">+68</div><div class="kpi-target">Meta: +60</div></div>
+        <div class="kpi r"><div class="kpi-lbl">Retrabalho</div><div class="kpi-val">6<span class="kpi-unit">%</span></div><div class="kpi-target">Meta: ≤5%</div></div>
+        <div class="kpi g"><div class="kpi-lbl">OS/Técnico/Dia</div><div class="kpi-val">5<span class="kpi-unit">.2</span></div><div class="kpi-target">Meta: 5</div></div>
+        <div class="kpi c"><div class="kpi-lbl">Uptime Rede</div><div class="kpi-val">99<span class="kpi-unit">.7%</span></div><div class="kpi-target">Meta: 99.5%</div></div>
+        <div class="kpi g"><div class="kpi-lbl">Ativações FTTH/dia</div><div class="kpi-val">142</div><div class="kpi-target">Meta: 130</div></div>
+        <div class="kpi"><div class="kpi-lbl">CSAT</div><div class="kpi-val">4<span class="kpi-unit">.4/5</span></div><div class="kpi-target">Meta: ≥4.0</div></div>
+        <div class="kpi r"><div class="kpi-lbl">Reclamações Anatel</div><div class="kpi-val">0<span class="kpi-unit">.8%</span></div><div class="kpi-target">Meta: ≤1%</div></div>
+        <div class="kpi o"><div class="kpi-lbl">Absenteísmo</div><div class="kpi-val">3<span class="kpi-unit">.2%</span></div><div class="kpi-target">Meta: ≤4%</div></div>
+      </div>
+      <div class="chart-card"><div class="cc-title"><span class="cc-dot"></span>Evolução KPIs — 6 Meses</div><div class="cw" style="height:230px"><canvas id="c-kpi"></canvas></div></div>
+    </div>
+
+    <!-- ════ FIBRA ════ -->
+    <div id="p-fibra" class="page">
+      <div class="pg-title">Infraestrutura Fibra Óptica · FTTH/GPON</div>
+      <div class="pg-sub">Topologia, parâmetros técnicos e calculadora de enlace óptico</div>
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="cc-title"><span class="cc-dot"></span>Parâmetros de Sinal</div>
+          <div class="gauge-row">
+            <div class="gi"><span class="g-lbl">TX OLT (+5 dBm)</span><div class="g-bw"><div class="g-bf" style="width:90%;background:var(--vcyan)"></div></div><span class="g-pct" style="color:var(--vcyan)">+5</span></div>
+            <div class="gi"><span class="g-lbl">Perda Total (22dB)</span><div class="g-bw"><div class="g-bf" style="width:73%;background:var(--vor)"></div></div><span class="g-pct" style="color:var(--vor)">-22</span></div>
+            <div class="gi"><span class="g-lbl">RX ONT (-17 dBm)</span><div class="g-bw"><div class="g-bf" style="width:65%;background:var(--vgreen)"></div></div><span class="g-pct" style="color:var(--vgreen)">-17</span></div>
+            <div class="gi"><span class="g-lbl">Margem (+10 dB)</span><div class="g-bw"><div class="g-bf" style="width:70%;background:var(--vp2)"></div></div><span class="g-pct" style="color:#CC77FF">+10</span></div>
+          </div>
+          <div class="alert a-gn" style="margin-top:14px">✓ Enlace estável — Dentro dos parâmetros GPON</div>
+        </div>
+        <div class="chart-card"><div class="cc-title"><span class="cc-dot"></span>Falhas por Causa</div><div class="cw" style="height:210px"><canvas id="c-falhas"></canvas></div></div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi g"><div class="kpi-lbl">Emendas/Mês</div><div class="kpi-val">1.847</div></div>
+        <div class="kpi"><div class="kpi-lbl">CTOs Ativas SP</div><div class="kpi-val">3.420</div></div>
+        <div class="kpi o"><div class="kpi-lbl">Clientes FTTH</div><div class="kpi-val">48K</div></div>
+        <div class="kpi c"><div class="kpi-lbl">Cobertura Bairros</div><div class="kpi-val">94<span class="kpi-unit">%</span></div></div>
+      </div>
+    </div>
+
+    <!-- ════ ÁGIL ════ -->
+    <div id="p-agile" class="page">
+      <div class="pg-title">Ferramentas Ágeis · PSR TEL SP</div>
+      <div class="pg-sub">Scrum · Kanban · OKR · Lean aplicados à gestão de campo</div>
+      <div class="ms-info"><span style="font-size:18px">ℹ️</span><span>Módulo de Gestão Ágil disponível na versão completa do sistema. Acesse pelo menu principal do Dashboard PSR Vivo.</span></div>
+      <div class="kpi-grid">
+        <div class="kpi g"><div class="kpi-lbl">Sprint Atual (sem)</div><div class="kpi-val">12</div><div class="kpi-target">Semana 14–20 Abr</div></div>
+        <div class="kpi"><div class="kpi-lbl">OS no Kanban</div><div class="kpi-val">342</div><div class="kpi-target">Backlog + Em campo</div></div>
+        <div class="kpi o"><div class="kpi-lbl">Velocity Sprint</div><div class="kpi-val">218</div><div class="kpi-target">OS concluídas/semana</div></div>
+        <div class="kpi c"><div class="kpi-lbl">OKR Q1 — SLA</div><div class="kpi-val">96<span class="kpi-unit">%</span></div><div class="kpi-target">KR1 atingido ✅</div></div>
+      </div>
+    </div>
+
+    <!-- ════ QUALIDADE ════ -->
+    <div id="p-qual" class="page">
+      <div class="pg-title">Ferramentas da Qualidade · PSR TEL SP</div>
+      <div class="pg-sub">PDCA · Pareto · FMEA · 5 Porquês · CEP · 5S</div>
+      <div class="kpi-grid">
+        <div class="kpi g"><div class="kpi-lbl">Auditoria Aprovada</div><div class="kpi-val">97<span class="kpi-unit">%</span></div><div class="kpi-target">Meta: 95%</div></div>
+        <div class="kpi r"><div class="kpi-lbl">Retrabalho</div><div class="kpi-val">6<span class="kpi-unit">%</span></div><div class="kpi-target">Meta: ≤5%</div></div>
+        <div class="kpi o"><div class="kpi-lbl">DPM (defeitos/milhão)</div><div class="kpi-val">320</div><div class="kpi-target">Meta: ≤400</div></div>
+        <div class="kpi c"><div class="kpi-lbl">CSAT</div><div class="kpi-val">4<span class="kpi-unit">.4</span></div><div class="kpi-target">Meta: ≥4.0</div></div>
+      </div>
+      <div class="chart-card"><div class="cc-title"><span class="cc-dot"></span>Pareto — Causas de Retrabalho</div><div class="cw" style="height:230px"><canvas id="c-pareto"></canvas></div></div>
+    </div>
+
+    <!-- ════ ALERTAS ════ -->
+    <div id="p-alertas" class="page">
+      <div class="pg-title">Central de Alertas · Operação em Tempo Real</div>
+      <div class="pg-sub">Incidentes críticos · SLA em risco · Falhas de rede</div>
+      <div class="kpi-grid">
+        <div class="kpi r"><div class="kpi-lbl">Críticos</div><div class="kpi-val">3</div><div class="kpi-trend dn">▼ Ação imediata</div></div>
+        <div class="kpi o"><div class="kpi-lbl">Em Risco</div><div class="kpi-val">7</div><div class="kpi-trend eq">● Monitorar</div></div>
+        <div class="kpi g"><div class="kpi-lbl">Normais</div><div class="kpi-val">332</div><div class="kpi-trend up">▲ OK</div></div>
+        <div class="kpi c"><div class="kpi-lbl">Uptime</div><div class="kpi-val">99<span class="kpi-unit">.7%</span></div><div class="kpi-trend up">▲ Excelente</div></div>
+      </div>
+      <div class="alert a-red">🔴 <strong>CRÍTICO</strong> — OS 18742 (Pinheiros): SLA vence em 45min — Escalar ao supervisor</div>
+      <div class="alert a-red">🔴 <strong>CRÍTICO</strong> — CTO Rua Augusta 823 vandalisada — 12 clientes sem serviço</div>
+      <div class="alert a-red">🔴 <strong>CRÍTICO</strong> — OS 18739: 3ª visita ao mesmo cliente em 30 dias — Retrabalho</div>
+      <div class="alert a-yw">🟡 <strong>ATENÇÃO</strong> — Retrabalho semanal 6.2% · Meta ≤5%</div>
+      <div class="alert a-yw">🟡 <strong>ATENÇÃO</strong> — Estoque splitters 1:16 abaixo do mínimo</div>
+      <div class="alert a-gn">✅ <strong>OK</strong> — NPS do dia: +71 · SLA Inst. 96% · FCR 87%</div>
+    </div>
+
+  </main>
+
+  <!-- Mobile nav -->
+  <nav class="mob-nav">
+    <div class="mob-nav-inner">
+      <button class="mn active" onclick="goPage('p-ind')"><span>🏠</span><span>Indicadores</span></button>
+      <button class="mn" onclick="goPage('p-dash')"><span>📊</span><span>Dashboard</span></button>
+      <button class="mn" onclick="goPage('p-kpis')"><span>🎯</span><span>KPIs</span></button>
+      <button class="mn" onclick="goPage('p-fibra')"><span>🔗</span><span>Fibra</span></button>
+      <button class="mn" onclick="goPage('p-agile')"><span>⚡</span><span>Ágil</span></button>
+      <button class="mn" onclick="goPage('p-qual')"><span>✅</span><span>Qualidade</span></button>
+      <button class="mn" onclick="goPage('p-alertas')"><span>🚨</span><span>Alertas</span></button>
+    </div>
+  </nav>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── clock ──
+function tick(){
+  const t=new Date().toLocaleTimeString('pt-BR');
+  const el=document.getElementById('ind-clock');
+  if(el) el.textContent=t;
+}
+setInterval(tick,1000); tick();
+
+// ── users ──
+const USERS={
+  gestor:{pass:'vivo2025',role:'Gestor · Administrador',avatar:'GS'},
+  supervisor:{pass:'tel2025',role:'Supervisor de Campo',avatar:'SV'},
+  tecnico:{pass:'fibra123',role:'Técnico de Campo',avatar:'TC'}
+};
+
+// ── login ──
+function toggleEye(){
+  const p=document.getElementById('f-pass');
+  const b=document.getElementById('eye-btn');
+  p.type=p.type==='password'?'text':'password';
+  b.textContent=p.type==='password'?'👁️':'🙈';
+}
+
+function doLogin(){
+  const nome=document.getElementById('f-nome').value.trim();
+  const user=document.getElementById('f-user').value.trim().toLowerCase();
+  const pass=document.getElementById('f-pass').value;
+  const err=document.getElementById('lerr');
+  const msg=document.getElementById('lerr-msg');
+
+  if(!nome){msg.textContent='Por favor, informe seu nome completo.';err.classList.add('show');return;}
+  if(!user){msg.textContent='Por favor, informe o usuário ou matrícula.';err.classList.add('show');return;}
+  if(!pass){msg.textContent='Por favor, informe a senha.';err.classList.add('show');return;}
+
+  const u=USERS[user];
+  if(!u||u.pass!==pass){
+    msg.textContent='Usuário ou senha incorretos. Verifique suas credenciais.';
+    err.classList.add('show');
+    document.getElementById('f-pass').value='';
+    return;
+  }
+  err.classList.remove('show');
+
+  // populate header
+  const initials=nome.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('uav').textContent=initials;
+  document.getElementById('unm').textContent=nome.split(' ')[0]+' '+nome.split(' ').slice(-1)[0];
+  document.getElementById('url').textContent=u.role;
+
+  // switch screen
+  document.getElementById('sc-login').classList.remove('active');
+  document.getElementById('sc-app').classList.add('active');
+
+  // render charts after transition
+  setTimeout(()=>{initAllCharts();},150);
+}
+
+// Enter key support
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('sc-login').classList.contains('active')) doLogin();
+});
+
+function doLogout(){
+  document.getElementById('sc-app').classList.remove('active');
+  document.getElementById('sc-login').classList.add('active');
+  document.getElementById('f-nome').value='';
+  document.getElementById('f-user').value='';
+  document.getElementById('f-pass').value='';
+  document.getElementById('lerr').classList.remove('show');
+}
+
+// ── navigation ──
+const pageMap={
+  'p-ind':0,'p-dash':1,'p-kpis':2,'p-fibra':3,'p-agile':4,'p-qual':5,'p-alertas':6
+};
+
+function goPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  const i=pageMap[id]??0;
+  document.querySelectorAll('.nav-btn').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+  document.querySelectorAll('.mn').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+
+  setTimeout(()=>renderPage(id),80);
+}
+
+// set first nav btn active
+document.addEventListener('DOMContentLoaded',()=>{
+  const btns=document.querySelectorAll('.nav-btn');
+  if(btns.length) btns[0].classList.add('active');
+});
+
+// ── charts ──
+const charts={};
+const P='#8B00CC',Pk='#CC0066',Cy='#00CCCC',Or='#FF6600',Gn='#00AA44',Rd='#CC0000',Yw='#FFCC00';
+
+function mk(id,cfg){
+  if(charts[id]){charts[id].destroy();delete charts[id];}
+  const el=document.getElementById(id);
+  if(!el) return;
+  charts[id]=new Chart(el,cfg);
+}
+
+const gridColor='rgba(102,0,153,0.12)';
+const tickColor='#8888B0';
+
+function initAllCharts(){
+  renderPage('p-ind');
+  renderPage('p-dash');
+}
+
+function renderPage(id){
+  if(id==='p-ind'){
+    mk('c-ind-os',{type:'bar',data:{labels:['Seg','Ter','Qua','Qui','Sex','Sáb'],
+      datasets:[
+        {label:'Instalação',data:[52,61,48,70,55,42],backgroundColor:P+'99',borderColor:P,borderWidth:1},
+        {label:'Reparo',data:[18,22,15,28,21,12],backgroundColor:Pk+'99',borderColor:Pk,borderWidth:1},
+        {label:'Manutenção',data:[8,10,12,9,7,5],backgroundColor:Cy+'99',borderColor:Cy,borderWidth:1}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tickColor,font:{size:10}}}},
+      scales:{x:{ticks:{color:tickColor},grid:{color:gridColor}},y:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+    mk('c-ind-sla',{type:'line',data:{labels:['Sem 1','Sem 2','Sem 3','Sem 4'],
+      datasets:[
+        {label:'SLA Inst %',data:[94,95,95,96],borderColor:Gn,backgroundColor:Gn+'22',fill:true,tension:.4,pointBackgroundColor:Gn},
+        {label:'SLA Reparo %',data:[89,91,90,91],borderColor:Or,backgroundColor:Or+'22',fill:true,tension:.4,pointBackgroundColor:Or},
+        {label:'FCR %',data:[84,85,86,87],borderColor:Cy,tension:.4,pointBackgroundColor:Cy}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tickColor,font:{size:10}}}},
+      scales:{x:{ticks:{color:tickColor},grid:{color:gridColor}},y:{ticks:{color:tickColor},grid:{color:gridColor},min:80,max:100}}}
+    });
+  }
+  if(id==='p-dash'){
+    mk('c-os',{type:'bar',data:{labels:['Seg','Ter','Qua','Qui','Sex','Sáb'],
+      datasets:[
+        {label:'Instalação',data:[52,61,48,70,55,42],backgroundColor:P+'99',borderColor:P,borderWidth:1},
+        {label:'Reparo',data:[18,22,15,28,21,12],backgroundColor:Pk+'99',borderColor:Pk,borderWidth:1},
+        {label:'Manutenção',data:[8,10,12,9,7,5],backgroundColor:Cy+'99',borderColor:Cy,borderWidth:1}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tickColor,font:{size:10}}}},
+      scales:{x:{ticks:{color:tickColor},grid:{color:gridColor}},y:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+    mk('c-tma',{type:'line',data:{labels:['Seg','Ter','Qua','Qui','Sex','Sáb'],
+      datasets:[{label:'TMA (h)',data:[4.5,4.1,3.9,4.8,4.2,3.8],borderColor:Cy,backgroundColor:Cy+'22',tension:.4,fill:true,pointBackgroundColor:Cy}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tickColor,font:{size:10}}}},
+      scales:{x:{ticks:{color:tickColor},grid:{color:gridColor}},y:{ticks:{color:tickColor},grid:{color:gridColor},min:3,max:6}}}
+    });
+    mk('c-sla',{type:'doughnut',data:{labels:['Dentro SLA','Violado'],
+      datasets:[{data:[94,6],backgroundColor:[Gn+'CC',Rd+'CC'],borderColor:[Gn,Rd],borderWidth:2}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:tickColor,font:{size:11}}}}}
+    });
+    mk('c-prod',{type:'bar',data:{labels:['Equipe A','Equipe B','Equipe C','Equipe D','Equipe E'],
+      datasets:[{label:'OS/dia',data:[5.8,5.2,4.9,5.5,6.1],backgroundColor:[Gn+'CC',P+'CC',Cy+'CC',Or+'CC',Pk+'CC']}]},
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:tickColor},grid:{color:gridColor}},y:{ticks:{color:tickColor},grid:{display:false}}}}
+    });
+  }
+  if(id==='p-kpis'){
+    mk('c-kpi',{type:'line',data:{labels:['Out','Nov','Dez','Jan','Fev','Mar'],
+      datasets:[
+        {label:'SLA Inst %',data:[93,94,92,95,95,96],borderColor:P,tension:.4,pointBackgroundColor:P},
+        {label:'FCR %',data:[82,83,84,85,86,87],borderColor:Cy,tension:.4,pointBackgroundColor:Cy},
+        {label:'NPS',data:[62,64,60,65,67,68],borderColor:Gn,tension:.4,pointBackgroundColor:Gn},
+        {label:'Retrabalho %',data:[8,7,7,6.5,6.2,6],borderColor:Rd,tension:.4,pointBackgroundColor:Rd}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tickColor,font:{size:10}}}},
+      scales:{x:{ticks:{color:tickColor},grid:{color:gridColor}},y:{ticks:{color:tickColor},grid:{color:gridColor}}}}
+    });
+  }
+  if(id==='p-fibra'){
+    mk('c-falhas',{type:'pie',data:{labels:['Emenda fusão','Conector','Macro-bend','ONT defeit.','CTO física','Cabo','Outros'],
+      datasets:[{data:[28,22,18,12,10,6,4],backgroundColor:[P+'CC',Pk+'CC',Or+'CC',Cy+'CC',Yw+'CC',Gn+'CC','#888CC']}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:tickColor,font:{size:10}}}}}
+    });
+  }
+  if(id==='p-qual'){
+    mk('c-pareto',{type:'bar',data:{labels:['Emenda Ruim','Sem OTDR','Cabo Errado','ONT Desat.','CTO Lotada','Rota Errada','Outros'],
+      datasets:[
+        {type:'bar',label:'Ocorrências',data:[42,28,19,14,11,8,5],backgroundColor:P+'CC',yAxisID:'y'},
+        {type:'line',label:'% Acumulado',data:[33,55,70,81,90,96,100],borderColor:Or,pointBackgroundColor:Or,tension:0,yAxisID:'y2'}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tickColor,font:{size:10}}}},
+      scales:{
+        x:{ticks:{color:tickColor},grid:{color:gridColor}},
+        y:{ticks:{color:tickColor},grid:{color:gridColor}},
+        y2:{position:'right',min:0,max:100,ticks:{color:Or,callback:v=>v+'%'},grid:{display:false}}
+      }}
+    });
+  }
+}
+</script>
+</body>
+</html>
